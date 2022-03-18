@@ -1,0 +1,8 @@
+CMakeFiles
+Makefile
+*.cmake
+CMakeCache.txt
+NucleiSegregation
+temp
+INFO.txt
+test.sh
