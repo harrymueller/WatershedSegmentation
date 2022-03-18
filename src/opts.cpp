@@ -47,11 +47,20 @@ Opts::Opts(int argc, char *argv[])
             case 'o':
                 this->output_dir = std::string(optarg);
                 break;
+            case 'g':
+                this->gem_file = std::string(optarg);
+                break;
             case 't': 
                 this->t = atoi(optarg);
                 break;
             case 'b': 
                 this->b = atoi(optarg);
+                break;
+            case 'x': 
+                this->x = atoi(optarg);
+                break;
+            case 'y': 
+                this->y = atoi(optarg);
                 break;
             case 'c': 
                 this->c = atof(optarg);
@@ -101,7 +110,7 @@ void Opts::usage(std::string opt_message)
 
     std::cout << "CMD: bin" << std::endl <<
                  "\tNOT IMPLEMENTED" << std::endl <<
-                 "\t> bin -i: -g: -o:" << std::endl << std::endl;
+                 "\t> bin -i: -g: -o: [-x 0] [-y 0]" << std::endl << std::endl;
 }
 
 void Opts::set_defaults()
@@ -111,6 +120,8 @@ void Opts::set_defaults()
         this->t = 150; this->b = 128;
     } else if (this->cmd == WATERSHED) {
         this->t = 100, this->b = 41; this->c = 0.03;
+    } else if (this->cmd == BIN) {
+        this->x = 0; this->y = 0;
     }
 
     this->input_file = ""; this->output_dir = ""; this->gem_file = "";

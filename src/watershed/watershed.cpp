@@ -97,7 +97,7 @@ Image Watershed::outline(Image original, Image watershed)
 }
 
 
-void Watershed::main(Opts opts)
+void Watershed::watershed(Opts opts)
 {
     // read image
     Image orig(opts.input_file);
@@ -106,10 +106,10 @@ void Watershed::main(Opts opts)
     std::cout << "Applying thresholds..." << std::endl;;
     Image thresholded = orig.duplicate();
 
-    Image globalI = Thresholds::global_threshold(thresholded, 100);
+    Image globalI = Thresholds::global_threshold(thresholded, opts.t);
     thresholded.applyMask(globalI);
 
-    Image gaussianI = Thresholds::gaussian_threshold(thresholded, 41, 0.03);
+    Image gaussianI = Thresholds::gaussian_threshold(thresholded, opts.b, opts.c);
     thresholded.applyMask(gaussianI);
     
     thresholded.save(opts.output_dir + "/1 thresholded.png");

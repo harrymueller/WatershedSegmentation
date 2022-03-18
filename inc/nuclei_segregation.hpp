@@ -22,4 +22,4 @@
 #include "watershed.hpp"
 
 // binning
-//#include "binning.hpp"
+#include "binning.hpp"

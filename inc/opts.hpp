@@ -14,7 +14,7 @@
 /*##############################
     PREPROCESSOR VARIABLES
 ##############################*/
-#define CLI_OPTIONS "hi:o:g:t:b:c:"
+#define CLI_OPTIONS "hi:o:g:t:b:c:x:y:"
 
 /*##############################
     FUNCTIONS
@@ -36,8 +36,9 @@ class Opts
 
         command_opts cmd;
 
-        int t; int b;
+        int t, b;
         float c;
+        int x, y;
 
         // constructor
         Opts(int, char*[]);
