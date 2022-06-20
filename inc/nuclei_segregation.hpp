@@ -12,9 +12,6 @@
 ##############################*/
 #include "opts.hpp"
 
-// image
-#include "image.hpp"
-
 // cropping
 #include "cropping.hpp"
 
@@ -23,3 +20,6 @@
 
 // binning
 #include "binning.hpp"
+
+// plotting
+#include "plotting.hpp"
