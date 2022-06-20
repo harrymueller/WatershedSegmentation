@@ -5,6 +5,7 @@
 */
 Opts::Opts(int argc, char *argv[])
 {
+    std::string arg;
     int option;
     opterr = 0;
 
@@ -24,6 +25,8 @@ Opts::Opts(int argc, char *argv[])
         this->cmd = WATERSHED;
     else if (command_str.compare(std::string("bin")) == 0)
         this->cmd = BIN;
+    else if (command_str.compare(std::string("plot")) == 0)
+        this->cmd = PLOT;
     else if (command_str.compare(std::string("help")) == 0) {
         this->usage();
         exit(EXIT_SUCCESS);
@@ -37,21 +40,32 @@ Opts::Opts(int argc, char *argv[])
 
     // get dashed options
     while((option = getopt(argc, argv, CLI_OPTIONS)) != -1) {
+        arg = std::string(optarg);
         switch (option) {
             case 'h': 
                 this->usage();
                 exit(EXIT_SUCCESS);
             case 'i':
-                this->input_file = std::string(optarg);
+                this->input_file = arg;
                 break;
             case 'o':
-                this->output_dir = std::string(optarg);
+                this->output_dir = arg;
                 break;
             case 'g':
-                this->gem_file = std::string(optarg);
+                this->gem_file = arg;
                 break;
             case 't': 
-                this->t = atoi(optarg);
+                if (this->cmd == PLOT) {
+                    if (arg.compare(std::string("values")) == 0) this->plot_type = VALUES;
+                    else if (arg.compare(std::string("greyscale")) == 0) this->plot_type = GREYSCALE;
+                    else if (arg.compare(std::string("rgb")) == 0) this->plot_type = RGB;
+                    else {
+                        this->usage("Invalid plot type, use values | greyscale | rgb");
+                        exit(EXIT_FAILURE);
+                    }
+                }
+                else
+                    this->t = atoi(optarg);
                 break;
             case 'b': 
                 this->b = atoi(optarg);
@@ -65,6 +79,14 @@ Opts::Opts(int argc, char *argv[])
             case 'c': 
                 this->c = atof(optarg);
                 break;
+            case 'p':
+                this->plot_file = std::string(optarg);
+                break;
+            case 'n':
+                this->by_spots = false;
+                break;
+            case 's':
+                this->by_spots = true;
             default: 
                 std::cout << "Unknown argument supplied.\n" << std::endl;
                 usage();
@@ -77,13 +99,16 @@ Opts::Opts(int argc, char *argv[])
         case 0:
             break;
         case 1:
-            this->usage("Please pass valid input image file.");
+            this->usage("Please pass a valid input image file.");
             exit(EXIT_FAILURE);
         case 2:
-            this->usage("Please pass valid output dir.");
+            this->usage("Please pass a valid output dir.");
             exit(EXIT_FAILURE);
         case 3:
-            this->usage("Please pass valid GEM file.");
+            this->usage("Please pass a valid GEM file.");
+            exit(EXIT_FAILURE);
+        case 4:
+            this->usage("Please pass a valid plot file.");
             exit(EXIT_FAILURE);
     }
 
@@ -109,8 +134,12 @@ void Opts::usage(std::string opt_message)
                  "\t> watershed -i: -o: [-t 100] [-b 41] [-c 0.03]" << std::endl << std::endl;
 
     std::cout << "CMD: bin" << std::endl <<
-                 "\tNOT IMPLEMENTED" << std::endl <<
+                 "\tBin the given gem file (-g) based on the ids given by -i" << std::endl <<
                  "\t> bin -i: -g: -o: [-x 0] [-y 0]" << std::endl << std::endl;
+
+     std::cout << "CMD: plot" << std::endl <<
+                 "\tGiven a segments.csv, and another file containing the values to plot, make a spatial plot. -t describes the type (values greyscale rgb). -s by spots or -n by nuclei (default)" << std::endl <<
+                 "\t> bin -i: -p: -o: -t: [-s | -n]" << std::endl << std::endl;
 }
 
 void Opts::set_defaults()
@@ -122,6 +151,8 @@ void Opts::set_defaults()
         this->t = 100, this->b = 41; this->c = 0.03;
     } else if (this->cmd == BIN) {
         this->x = 0; this->y = 0;
+    } else if (this->cmd == PLOT) {
+        this->by_spots = false;
     }
 
     this->input_file = ""; this->output_dir = ""; this->gem_file = "";
@@ -148,6 +179,11 @@ int Opts::validate_inputs()
             return 3;
         }
     }
+    else if (this->cmd == PLOT) {
+        if (this->plot_file.empty() || !std::filesystem::exists(this->plot_file)) {
+            return 4;
+        }
+    }
 
     return 0;
 }
@@ -161,5 +197,4 @@ bool Opts::add_sub_dir()
     
     if (std::filesystem::exists(this->output_dir)) return true;
     else return (mkdir(this->output_dir.c_str(), 0700) == 0);
-    //return std::filesystem::create_directory(this->output_dir, 0666);
 }
