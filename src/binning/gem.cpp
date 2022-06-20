@@ -20,6 +20,11 @@ void GEM::gem(Mat im, Opts opts)
     int dims[4] = {opts.x, opts.y, opts.x + im.size().width, opts.y + im.size().height};
     std::vector<GEMLine> gem = GEM::read_gem(opts.gem_file, dims);
     
+    if (gem.size() == 0) {
+        std::cout << "No valid genes in region." << std::endl;
+        return;
+    }
+    
     // for each row in GEM
     for (i = 0; i < gem.size(); i++) {
         if (current_gene.empty()) { // start
@@ -63,8 +68,9 @@ std::vector<GEMLine> GEM::read_gem(std::string gem_file, int *dims)
         current = GEMLine(l);
 
         if (current.x >= dims[0] && current.x <= dims[2] && 
-            current.y >= dims[1] && current.y <= dims[3])
+            current.y >= dims[1] && current.y <= dims[3]) {
                 gem.push_back(current);
+            }
     }
 
     // sort

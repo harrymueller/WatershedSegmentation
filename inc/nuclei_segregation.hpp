@@ -20,6 +20,3 @@
 
 // binning
 #include "binning.hpp"
-
-// plotting
-#include "plotting.hpp"

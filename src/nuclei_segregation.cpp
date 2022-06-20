@@ -30,9 +30,6 @@ int main(int argc, char *argv[])
         Watershed::watershed(opts);
     if (opts.cmd == BIN)
         Binning::bin(opts);
-    if (opts.cmd == PLOT)
-        Plotting::plot_wrapper(opts);
-
 
     exit(EXIT_SUCCESS);
 }

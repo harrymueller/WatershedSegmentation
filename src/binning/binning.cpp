@@ -7,7 +7,7 @@ void Binning::bin(Opts opts)
 
     // spots to nuclei and average spot coords
     std::cout << "Binning spots..." << std::endl;
-    //NucleiSpots::nuclei_spots(im, opts.output_dir);
+    NucleiSpots::nuclei_spots(im, opts.output_dir);
     
     std::cout << "Binning genes from GEM file..." << std::endl;
     GEM::gem(im, opts);
