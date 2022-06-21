@@ -4,6 +4,7 @@ void GEM::gem(Mat im, Opts opts)
 {
     // number of bin ids
     int max_bin_id = Binning::find_max_bin_id(im);
+
     // decl ints
     int id, i;
 
@@ -19,7 +20,8 @@ void GEM::gem(Mat im, Opts opts)
     // get gem
     int dims[4] = {opts.x, opts.y, opts.x + im.size().width, opts.y + im.size().height};
     std::vector<GEMLine> gem = GEM::read_gem(opts.gem_file, dims);
-    
+
+    // ensure some lines in gem
     if (gem.size() == 0) {
         std::cout << "No valid genes in region." << std::endl;
         return;
@@ -37,7 +39,8 @@ void GEM::gem(Mat im, Opts opts)
         }
 
         // get id by taking the cluster id and removing two
-        id = im.at<int>(gem[i].x - opts.x, gem[i].y - opts.y) - 2;
+        id = im.at<int>(gem[i].y - opts.y, gem[i].x - opts.x) - 2;
+        
         if (id >= 0) counts[id] += gem[i].count; // if a valid nuclei id -> add to counts
     } 
 
@@ -64,11 +67,12 @@ std::vector<GEMLine> GEM::read_gem(std::string gem_file, int *dims)
 
     // read line by line
     std::getline(file, l); // clear first line;
+
     while (std::getline(file, l)) {
         current = GEMLine(l);
 
-        if (current.x >= dims[0] && current.x <= dims[2] && 
-            current.y >= dims[1] && current.y <= dims[3]) {
+        if (current.x >= dims[0] && current.x < dims[2] && 
+            current.y >= dims[1] && current.y < dims[3]) {
                 gem.push_back(current);
             }
     }
