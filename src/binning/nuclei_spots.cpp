@@ -42,7 +42,7 @@ void NucleiSpots::nuclei_spots(Mat im, std::string output_dir)
     nuclei_spots.close();
     
     NucleiSpots::nuclei_coords(num_nuclei, nuclei_tallies, output_dir + "/nuclei_coords.tsv");
-    NucleiSpots::stats(num_spots, num_nuclei, nuclei_tallies, output_dir + "/stats.tsv");
+    NucleiSpots::stats(num_spots, im.size().width * im.size().height, num_nuclei, nuclei_tallies, output_dir + "/stats.tsv");
 }
 
 /*
@@ -69,7 +69,7 @@ void NucleiSpots::nuclei_coords(int num_nuclei, std::vector<std::vector<uint>> n
 /*
     Calculate some basic statistics based on num spots, num nuclei, and nuclei tallies, and output to a file
 */
-void NucleiSpots::stats(int num_spots, int num_nuclei, std::vector<std::vector<uint>> nuclei_tallies, std::string filename)
+void NucleiSpots::stats(int num_spots, int num_spots_removed, int num_nuclei, std::vector<std::vector<uint>> nuclei_tallies, std::string filename)
 {
     // stats
     std::ofstream stats;
@@ -93,6 +93,11 @@ void NucleiSpots::stats(int num_spots, int num_nuclei, std::vector<std::vector<u
     }
     stats << "std_nuclei_size\t" << sqrt(diff_squared / num_nuclei) << std::endl <<
         "min_nuclei_size\t" << min_nuclei_size << std::endl <<
-        "max_nuclei_size\t" << max_nuclei_size << std::endl;
+        "max_nuclei_size\t" << max_nuclei_size << std::endl << std::endl;
+        
+    // number of spots
+    stats << "# Statistics on number of spots" << std::endl << 
+        "num_spots_retained\t" << num_spots << std::endl <<
+        "num_spots_removed\t" << num_spots_removed << std::endl;
     stats.close();
 }

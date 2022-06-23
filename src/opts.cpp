@@ -122,7 +122,7 @@ void Opts::usage(std::string opt_message)
     std::cout << "Usage: nuclei_segregation CMD -i: -o: [OPTIONS]" << std::endl << std::endl;
     std::cout << "CMD: crop" << std::endl <<
                  "\tCrops the given image based on the threshold and buffer given." << std::endl <<
-                 "\t> crop -i: -o: [-t 150] [-b 128]" << std::endl << std::endl;
+                 "\t> crop -i: -o: [-t 150]" << std::endl << std::endl;
 
     std::cout << "CMD: watershed" << std::endl <<
                  "\tApplies a global threshold (t), a gaussian threshold (b and c), then applies the watershed algorithm for segmentation." << std::endl <<
@@ -137,7 +137,7 @@ void Opts::set_defaults()
 {
     // setting defaults
     if (this->cmd == CROP) {
-        this->t = 150; this->b = 128;
+        this->t = 150; //this->b = 128;
     } else if (this->cmd == WATERSHED) {
         this->t = 100, this->b = 41; this->c = 0.03;
     } else if (this->cmd == BIN) {

@@ -32,6 +32,11 @@ Image FG_BG::get_sure_fg(Image thresholdedI, int distanceType, int maskSize)
 */
 Image FG_BG::get_sure_bg(Image thresholdedI, Mat kernel)
 {
+    if (kernel.size().width == 0) {
+        // create kernel
+        kernel = Mat(3, 3, CV_8UC1, 1);
+    }
+
     Mat dest;
     dilate(thresholdedI.get_im(), dest, kernel, Point(-1, -1), 5);
     

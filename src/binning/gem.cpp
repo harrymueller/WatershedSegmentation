@@ -45,6 +45,7 @@ void GEM::gem(Mat im, Opts opts)
     } 
 
     GEM::save_genes(current_gene, output_file, max_bin_id, counts);
+    //GEM::stats(opts.output_dir + "/stats.tsv")
 }
 
 /*
@@ -117,6 +118,21 @@ void GEM::save_genes(std::string gene, std::string filename, int max_bin_id, std
 
     file.close();
 }
+
+/*void GEM::stats(std::string filename) {
+    // stats
+    std::ofstream stats;
+    stats.open(filename);
+
+    stats << "num_spots_w_transcripts_retained\t" << "TODO" << std::endl <<
+             "num_spots_w_transcripts_removed\t" << "TODO" << std::endl << std::endl;
+
+    stats << "total_num_transcripts\t" << "TODO" << std::endl <<
+             "num_spots_w_transcripts_removed\t" << "TODO" << std::endl;
+
+    stats.close();
+    
+}*/
 
 /*
     GEMLine constructor that takes a string

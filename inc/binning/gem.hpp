@@ -32,6 +32,8 @@ namespace GEM
 
     void add_header_to_output(std::string);
     void save_genes(std::string, std::string, int, std::vector<uint>);
+
+    //void stats(std::string);
 }
 
 
