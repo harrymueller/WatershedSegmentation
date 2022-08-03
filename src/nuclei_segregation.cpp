@@ -17,13 +17,11 @@
     swap vectors w/ arrays
 */
 
-
-
 int main(int argc, char *argv[])
 {
     // params
     Opts opts = Opts(argc, argv);
-
+    
     if (opts.cmd == CROP)
         Cropping::crop(opts);
     if (opts.cmd == WATERSHED)
