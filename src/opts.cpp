@@ -1,5 +1,4 @@
 #include "opts.hpp"
-
 /*
     Sorts through parameters, checking that all req params are supplied, and returns Opts obj
 */
