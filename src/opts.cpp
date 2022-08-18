@@ -21,6 +21,8 @@ Opts::Opts(int argc, char *argv[])
     // check what command and set opts
     if (command_str.compare(std::string("crop")) == 0)
         this->cmd = CROP;
+    else if (command_str.compare(std::string("threshold")) == 0)
+        this->cmd = THRESHOLD;
     else if (command_str.compare(std::string("watershed")) == 0)
         this->cmd = WATERSHED;
     else if (command_str.compare(std::string("bin")) == 0)
@@ -124,6 +126,11 @@ void Opts::usage(std::string opt_message)
                  "\tCrops the given image based on the threshold and buffer given." << std::endl <<
                  "\t> crop -i: -o: [-t 150] [-b 128]" << std::endl << std::endl;
 
+    std::cout << "CMD: threshold" << std::endl <<
+                 "\tApplies a global threshold (t), a gaussian threshold (b and c)" << std::endl <<
+                 "\t> watershed -i: -o: [-t 100] [-b 41] [-c 0.03]" << std::endl << std::endl;
+
+
     std::cout << "CMD: watershed" << std::endl <<
                  "\tApplies a global threshold (t), a gaussian threshold (b and c), then applies the watershed algorithm for segmentation." << std::endl <<
                  "\t> watershed -i: -o: [-t 100] [-b 41] [-c 0.03]" << std::endl << std::endl;
@@ -138,6 +145,8 @@ void Opts::set_defaults()
     // setting defaults
     if (this->cmd == CROP) {
         this->t = 150; this->b = 128;
+    } else if (this->cmd == THRESHOLD) {
+        this->t = 100, this->b = 41; this->c = 0.03;
     } else if (this->cmd == WATERSHED) {
         this->t = 100, this->b = 41; this->c = 0.03;
     } else if (this->cmd == BIN) {
@@ -176,6 +185,7 @@ bool Opts::add_sub_dir()
 {
     // make output dir
     if (this->cmd == CROP) this->output_dir = this->output_dir + "/01_cropping";
+    else if (this->cmd == THRESHOLD) this->output_dir = this->output_dir + "/02a_threshold";
     else if (this->cmd == WATERSHED) this->output_dir = this->output_dir + "/02_watershed";
     else if (this->cmd == BIN) this->output_dir = this->output_dir + "/03_binning";
     

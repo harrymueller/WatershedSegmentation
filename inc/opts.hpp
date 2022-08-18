@@ -22,9 +22,10 @@
 
 enum command_opts {
     CROP = 0,
-    WATERSHED = 1,
-    BIN = 2,
-    PLOT = 3,
+    THRESHOLD = 1,
+    WATERSHED = 2,
+    BIN = 3,
+    PLOT = 4
 };
 
 enum plot_types {

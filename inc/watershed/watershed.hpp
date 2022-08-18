@@ -21,5 +21,6 @@ namespace Watershed {
     Image apply_watershed(Image, Image);
     Image outline(Image, Image);
     void watershed(Opts);
+    void threshold(Opts);
 }
 #endif

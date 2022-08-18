@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
         Cropping::crop(opts);
     if (opts.cmd == WATERSHED)
         Watershed::watershed(opts);
+    if (opts.cmd == THRESHOLD)
+        Watershed::threshold(opts);
     if (opts.cmd == BIN)
         Binning::bin(opts);
 
