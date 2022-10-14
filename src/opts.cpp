@@ -4,6 +4,7 @@
 */
 Opts::Opts(int argc, char *argv[])
 {
+    std::string arg;
     int option;
     opterr = 0;
 
@@ -19,6 +20,8 @@ Opts::Opts(int argc, char *argv[])
     // check what command and set opts
     if (command_str.compare(std::string("crop")) == 0)
         this->cmd = CROP;
+    else if (command_str.compare(std::string("threshold")) == 0)
+        this->cmd = THRESHOLD;
     else if (command_str.compare(std::string("watershed")) == 0)
         this->cmd = WATERSHED;
     else if (command_str.compare(std::string("bin")) == 0)
@@ -36,25 +39,53 @@ Opts::Opts(int argc, char *argv[])
 
     // get dashed options
     while((option = getopt(argc, argv, CLI_OPTIONS)) != -1) {
+        arg = std::string(optarg);
         switch (option) {
             case 'h': 
                 this->usage();
                 exit(EXIT_SUCCESS);
             case 'i':
-                this->input_file = std::string(optarg);
+                this->input_file = arg;
                 break;
             case 'o':
-                this->output_dir = std::string(optarg);
+                this->output_dir = arg;
+                break;
+            case 'g':
+                this->gem_file = arg;
                 break;
             case 't': 
-                this->t = atoi(optarg);
+                if (this->cmd == PLOT) {
+                    if (arg.compare(std::string("values")) == 0) this->plot_type = VALUES;
+                    else if (arg.compare(std::string("greyscale")) == 0) this->plot_type = GREYSCALE;
+                    else if (arg.compare(std::string("rgb")) == 0) this->plot_type = RGB;
+                    else {
+                        this->usage("Invalid plot type, use values | greyscale | rgb");
+                        exit(EXIT_FAILURE);
+                    }
+                }
+                else
+                    this->t = atoi(optarg);
                 break;
             case 'b': 
                 this->b = atoi(optarg);
                 break;
+            case 'x': 
+                this->x = atoi(optarg);
+                break;
+            case 'y': 
+                this->y = atoi(optarg);
+                break;
             case 'c': 
                 this->c = atof(optarg);
                 break;
+            case 'p':
+                this->plot_file = std::string(optarg);
+                break;
+            case 'n':
+                this->by_spots = false;
+                break;
+            case 's':
+                this->by_spots = true;
             default: 
                 std::cout << "Unknown argument supplied.\n" << std::endl;
                 usage();
@@ -67,13 +98,13 @@ Opts::Opts(int argc, char *argv[])
         case 0:
             break;
         case 1:
-            this->usage("Please pass valid input image file.");
+            this->usage("Please pass a valid input image file.");
             exit(EXIT_FAILURE);
         case 2:
-            this->usage("Please pass valid output dir.");
+            this->usage("Please pass a valid output dir.");
             exit(EXIT_FAILURE);
         case 3:
-            this->usage("Please pass valid GEM file.");
+            this->usage("Please pass a valid GEM file.");
             exit(EXIT_FAILURE);
     }
 
@@ -94,13 +125,18 @@ void Opts::usage(std::string opt_message)
                  "\tCrops the given image based on the threshold and buffer given." << std::endl <<
                  "\t> crop -i: -o: [-t 150] [-b 128]" << std::endl << std::endl;
 
+    std::cout << "CMD: threshold" << std::endl <<
+                 "\tApplies a global threshold (t), a gaussian threshold (b and c)" << std::endl <<
+                 "\t> watershed -i: -o: [-t 100] [-b 41] [-c 0.03]" << std::endl << std::endl;
+
+
     std::cout << "CMD: watershed" << std::endl <<
                  "\tApplies a global threshold (t), a gaussian threshold (b and c), then applies the watershed algorithm for segmentation." << std::endl <<
                  "\t> watershed -i: -o: [-t 100] [-b 41] [-c 0.03]" << std::endl << std::endl;
 
     std::cout << "CMD: bin" << std::endl <<
-                 "\tNOT IMPLEMENTED" << std::endl <<
-                 "\t> bin -i: -g: -o:" << std::endl << std::endl;
+                 "\tBin the given gem file (-g) based on the ids given by -i" << std::endl <<
+                 "\t> bin -i: -g: -o: [-x 0] [-y 0]" << std::endl << std::endl;
 }
 
 void Opts::set_defaults()
@@ -108,8 +144,12 @@ void Opts::set_defaults()
     // setting defaults
     if (this->cmd == CROP) {
         this->t = 150; this->b = 128;
+    } else if (this->cmd == THRESHOLD) {
+        this->t = 100, this->b = 41; this->c = 0.03;
     } else if (this->cmd == WATERSHED) {
         this->t = 100, this->b = 41; this->c = 0.03;
+    } else if (this->cmd == BIN) {
+        this->x = 0; this->y = 0;
     }
 
     this->input_file = ""; this->output_dir = ""; this->gem_file = "";
@@ -144,10 +184,10 @@ bool Opts::add_sub_dir()
 {
     // make output dir
     if (this->cmd == CROP) this->output_dir = this->output_dir + "/01_cropping";
+    else if (this->cmd == THRESHOLD) this->output_dir = this->output_dir + "/02a_threshold";
     else if (this->cmd == WATERSHED) this->output_dir = this->output_dir + "/02_watershed";
     else if (this->cmd == BIN) this->output_dir = this->output_dir + "/03_binning";
     
     if (std::filesystem::exists(this->output_dir)) return true;
     else return (mkdir(this->output_dir.c_str(), 0700) == 0);
-    //return std::filesystem::create_directory(this->output_dir, 0666);
 }

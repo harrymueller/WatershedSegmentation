@@ -13,21 +13,23 @@
     use either tsv or csv consistantly
     improve namespaces
     verbosity option
+    convert mean -> median for binning?
+    swap vectors w/ arrays
 */
-
-
 
 int main(int argc, char *argv[])
 {
     // params
     Opts opts = Opts(argc, argv);
-
+    
     if (opts.cmd == CROP)
         Cropping::crop(opts);
     if (opts.cmd == WATERSHED)
-        Watershed::main(opts);
-    //if (opts->bin)
-    //    bin(opts, output_dir);
+        Watershed::watershed(opts);
+    if (opts.cmd == THRESHOLD)
+        Watershed::threshold(opts);
+    if (opts.cmd == BIN)
+        Binning::bin(opts);
 
     exit(EXIT_SUCCESS);
 }

@@ -20,7 +20,7 @@ Image::Image(std::string filename)
 
 void isValid(Mat im) {
     if (!im.data) {
-        printf("Invalid input image.\n");
+        std::cout << "Input is not a valid image file." << std::endl;
         exit(EXIT_FAILURE);
     }
 }

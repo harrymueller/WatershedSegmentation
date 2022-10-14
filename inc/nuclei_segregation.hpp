@@ -12,9 +12,6 @@
 ##############################*/
 #include "opts.hpp"
 
-// image
-#include "image.hpp"
-
 // cropping
 #include "cropping.hpp"
 
@@ -22,4 +19,4 @@
 #include "watershed.hpp"
 
 // binning
-//#include "binning.hpp"
+#include "binning.hpp"

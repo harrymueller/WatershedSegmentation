@@ -20,6 +20,7 @@ namespace Watershed {
     Image get_markers(Image, Image);
     Image apply_watershed(Image, Image);
     Image outline(Image, Image);
-    void main(Opts);
+    void watershed(Opts);
+    void threshold(Opts);
 }
 #endif

@@ -9,8 +9,8 @@ void Cropping::crop(Opts opts)
     Image orig(opts.input_file);
 
     // array of [orig x, orig y, min x, min y, max x, max y]
-    int dims[6] = {orig.width(), orig.height(), orig.width(), orig.height(), -1, -1};
-
+    int dims[6] = {orig.width(), orig.height(), 0,0,orig.width(), orig.height()};
+    
     // search image for min, max x and y vals
     for ( int i = 0; i < dims[0]; i++ ) {
         for ( int j = 0; j < dims[1]; j++ ) {
@@ -19,7 +19,7 @@ void Cropping::crop(Opts opts)
             
         }
     }
-
+    
     // crop image
     Cropping::add_buffer(dims, opts.b);
     
